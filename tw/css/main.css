@@ -1,9 +1,22 @@
 body {
 	margin: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+}
+#head {
+	text-align: center;
+}
+.canv {
+	border: 1px solid black;
+	position: absolute;
 }
 #canv1 {
-	border: 1px solid black;
+	z-index: 1;
+}
+#canv2 {
+	z-index: 0;
+}
+#cOut {
+	width: 500px;
+	height: 500px;
+	margin: auto;
+	right:0;left:0;bottom:0;top:0;
 }
