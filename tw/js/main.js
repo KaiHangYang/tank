@@ -6,8 +6,8 @@ window.onload = function(){
 	var warCtx = warCanv.getContext("2d");
 
 	var mapVar = [
-		[1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,7,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -51,6 +51,8 @@ window.onload = function(){
 	for (var i=0; i <= 3; i++){
 		player2[i] = new Image();
 	}
+	var pbul = new Image();
+	var ebul = new Image();
 
 	wall.src = "media/img/wall/wall.gif";
 	steel.src = "media/img/wall/steel.gif";
@@ -69,6 +71,8 @@ window.onload = function(){
 	player2[1].src = "media/img/player/p2tankR.gif";
 	player2[2].src = "media/img/player/p2tankD.gif";
 	player2[3].src = "media/img/player/p2tankL.gif";
+	pbul.src = "media/img/others/playerbullet.gif";
+	ebul.src = "media/img/others/enemybullet.gif";
 	//下来是地图对象map话说只用画墙还有增益
 	function norMap(){
 		var map = {};
@@ -115,11 +119,55 @@ window.onload = function(){
 		}
 		return map;
 	}
+//下面是坦克对象 
+	var U=119,R=100,D=115,L=97;
+
+	sudo apt-get install cinnamon
+	function Tank(){
+		var tank = {};
+
+		tank.pos = {X:100,Y:100};
+		tank.dir = 0;
+
+		tank.move = function(e){
+			switch(e){
+				case U:tank.dir=0;tank.pos.Y-=10;tank.draw();break;
+				case R:tank.dir=1;tank.pos.X+=10;tank.draw();break;
+				case D:tank.dir=2;tank.pos.Y+=10;tank.draw();break;
+				case L:tank.dir=3;tank.pos.X-=10;tank.draw();break;
+			}
+		}
+		tank.fire = function(){
+		}
+		tank.draw = function(){
+			b.draw();
+			switch(tank.dir){
+				case 0:warCtx.drawImage(player1[0], tank.pos.X, tank.pos.Y,40,40);break;
+				case 1:warCtx.drawImage(player1[1], tank.pos.X, tank.pos.Y,40,40);break;
+				case 2:warCtx.drawImage(player1[2], tank.pos.X, tank.pos.Y,40,40);break;
+				case 3:warCtx.drawImage(player1[3], tank.pos.X, tank.pos.Y,40,40);break;	
+			}
+		}
+		return tank;
+	}
+	function Bullet(owner,side){
+		var bul = {};
+		bul.pos = {X:0,Y:0};
+		bul.dir = 0;
+
+		bul.draw = function(){
+			
+		}
+	}
 	//下面是实验
 	var a = new norMap();
 	var b = new warMap();
-	player2[3].onload = function(){a.draw();}
+	var t = new Tank();
+	pbul.onload = function(){a.draw();}
 	b.draw();//上面是实验
+	window.onkeypress = function(event){
+		var e = event.keyCode;
+		t.move(e);
+	}
 	//下面是tank对象
-	
 }
