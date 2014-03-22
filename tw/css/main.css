@@ -13,6 +13,7 @@ body {
 }
 #canv2 {
 	z-index: 0;
+	background-color:black;
 }
 #cOut {
 	width: 520px;
