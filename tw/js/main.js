@@ -3,8 +3,10 @@ window.onload = function(){
 	canv = document.getElementById("canv2").getContext("2d");
 	canvStatic = document.getElementById("canv1").getContext("2d");
 	//先写出来所需要的数组
+	enemy = new Array(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	enemyBullet = new Array(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	enemyBulletBomb = new Array(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+	play1 = null;//这个就是玩家
 	player1Bullet = null;
 	player1BulletBomb = null;
 	//写tank出生的类
@@ -243,7 +245,7 @@ window.onload = function(){
 
 		return player;
 	}
-	//敌人的坦克类。需要有敌方坦克的随意移动以及随意发子弹，以及他们的碰撞事件。现在还不太需要  所以等等在说。
+	//敌人的坦克类。需要有敌方坦克的随意移动以及随意发子弹，以及他们的碰撞事件。这个敌人坦克的随机运动与发射子弹参考了别人的代码。 原来是想要使用setInteral来做敌人坦克的随机移动不过看到别人用的那种方法觉得更好一些
 	function Enemy(x, y, dir, rate, tankType, isLive){
 		var enemy = {};
 		enemy.tank = Tank;
@@ -251,12 +253,124 @@ window.onload = function(){
 		enemy.time = null;
 
 		enemy.move = function(){
-			// if (enemy.isLive == false){
-
-			// }我的构思：我想是先检测周围有没有墙如果有则随机选定一个方向发射子弹如果有一个方向没有则选定那个方向继续往前走
-			
+			if (enemy.isLive == false){
+				return;
+			}
+			enemy.changDir();
+			switch (enemy.dir){
+				case 0: 
+					if (enemy.y <= 0){
+						enemy.beyondChange();
+						return;
+					}
+					if (!enemy.enemyTouch(enemy)){
+						enemy.moveUp();
+					}
+					break;
+				case 1:
+					if (enemy.x >= 480){
+						enemy.beyondChange();
+						return;
+					}
+					if (!enemy.enemyTouch(enemy)){
+						enemy.moveRight();
+					}
+					break;
+				case 2: 
+					if (enemy.y >= 480){
+						enemy.beyondChange();
+						return;
+					}
+					if (!enemy.enemyTouch(enemy)){
+						enemy.moveDown();
+					}
+					break;
+				case 3:
+					if (enemy.x <= 0){
+						enemy.beyondChange();
+						return;
+					}
+					if (!enemy.enemyTouch(enemy)){
+						enemy.moveLeft();
+					}
+					break;
+			}
+		}
+		enemy.changeDir = function (){
+			var randDir = Math.round(Math.random()*99);
+			if (randDir < 4){
+				enemy.dir = Math.round(Math.random()*3);
+			}
+		}
+		enemy.beyondChange = function (){
+			enemy.dir = Math.round(Math.random()*3);
+		}
+		enemy.fire = function(en) {
+			if (enemyBullet[en] != null){
+				return;
+			}
+			if ((Math.round(Math.random()*99)) < 4){
+				switch (enemy.dir){
+				case 0:
+					enemyBullet[en] = new Bullet(enemy.x + 15, enemy.y - 5, 7, enemy.dir);
+					break;
+				case 1:
+					enemyBullet[en] = new Bullet(enemy.x + 40, enemy.y + 15, 7, enemy.dir);
+					break;
+				case 2:
+					enemyBullet[en] = new Bullet(enemy.x + 15, enemy.y + 40, 7, enemy.dir);
+					break;
+				case 3:
+					enemyBullet[en] = new Bullet(enemy.x - 5, enemy.y + 15, 7, enemy.dir);
+					break;
+				}
+			}
+			enemyBullet[en].time = window.setInterval("enemyBullet["+en+"].run("+en+")", 20);
+		}
+		enemy.enemyTouch = function (enemy1){
+			var enemy2 = null;
+			for (var en2 = 0; en2 < enemy.length; en2++){
+				enemy2 = enemy[en2];
+				if (enemy2 != null && enemy2.isLive == true){
+					switch (enemy1.dir){
+						case 0:
+							if ((play1 != null && play1.isLive == true)&&(enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y <= play1.y - 38)){
+								return true;
+							}
+							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y <= enemy2.y - 38)){
+								return true;
+							}
+							break;
+						case 1:
+							if ((play1 != null && play1.isLive == true)&&(enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x >= play1.x - 38)){
+								return true;
+							}
+							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x >= enemy2.x - 38)){
+								return true;
+							}
+							break;
+						case 2:
+							if ((play1 != null && play1.isLive == true)&&(enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y >= play1.y - 38)){
+								return true;
+							}
+							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y >= enemy2.y - 38)){
+								return true;
+							}
+							break;
+						case 3:
+							if ((play1 != null && play1.isLive == true)&&(enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x <= play1.x + 38)){
+								return true;
+							}
+							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x <= enemy2.x + 38)){
+								return true;
+							}
+							break;
+					}
+				}
+			}
 
 		}
+
 		return enemy;
 	}
 	//下面是我想搞得地图以及坦克的绘制。
@@ -320,6 +434,48 @@ function bulletWallStrike(bullet, map, whichTank){
 
 	switch(map.mapArr[numY][numX]){
 		case 1:
+			switch (bullet.dir){
+				case 0: 
+					if ((bullet.x - 20*numX) >= 10){
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY][numX+1] = 0;
+					}
+					else {
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY][numX-1] = 0;
+					}
+					break;
+				case 1:
+					if ((bullet.y - 20*numY) >= 10){
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY+1][numX] = 0;
+					}
+					else {
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY-1][numX] = 0;
+					}
+					break;
+				case 2:
+					if ((bullet.x - 20*numX) >= 10){
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY][numX+1] = 0;
+					}
+					else {
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY][numX-1] = 0;
+					}
+					break;
+				case 3:
+					if ((bullet.y - 20*numY) >= 10){
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY+1][numX] = 0;
+					}
+					else {
+						map.mapArr[numY][numX] = 0;
+						map.mapArr[numY-1][numX] = 0;
+					}
+					break;
+			}
 			map.mapArr[numY][numX] = 0;
 			window.clearInterval(bullet.time);
 			bullet.isLive = false;
@@ -333,8 +489,50 @@ function bulletWallStrike(bullet, map, whichTank){
 			}
 			return 1;
 		case 2:
+
 			if(bullet.strength == 1){
-				map.mapArr[numY][numX] = 0;
+				switch (bullet.dir){
+					case 0: 
+						if ((bullet.x - 20*numX) >= 10){
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY][numX+1] = 0;
+						}
+						else {
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY][numX-1] = 0;
+						}
+						break;
+					case 1:
+						if ((bullet.y - 20*numY) >= 10){
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY+1][numX] = 0;
+						}
+						else {
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY-1][numX] = 0;
+						}
+						break;
+					case 2:
+						if ((bullet.x - 20*numX) >= 10){
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY][numX+1] = 0;
+						}
+						else {
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY][numX-1] = 0;
+						}
+						break;
+					case 3:
+						if ((bullet.y - 20*numY) >= 10){
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY+1][numX] = 0;
+						}
+						else {
+							map.mapArr[numY][numX] = 0;
+							map.mapArr[numY-1][numX] = 0;
+						}
+						break;
+				}
 			}	
 			window.clearInterval(bullet.time);
 			bullet.isLive = false;
@@ -419,29 +617,28 @@ function tankStrikeWall(tank, map){
 
 	}
 	//下面是临时测试以及涉及到最后的实现。
-	play = new Player(160, 480, 0, 5, player1, true);
-	var enemy = new Array(4);
+	play1 = new Player(160, 480, 0, 5, player2, true);
 	e1 = new Enemy(0, 0, 2, 4, enemy1, true);
 	//下面的这个是很重要的
 	window.onkeypress = function(event){
 		switch (event.keyCode){
 			case 119: 
-				play.moveUp();
+				play1.moveUp();
 				break;
 			case 100:
-				play.moveRight();
+				play1.moveRight();
 				break;
 			case 115:
-				play.moveDown();
+				play1.moveDown();
 				break;
 			case 97:
-				play.moveLeft();
+				play1.moveLeft();
 				break;
 		}
 	}
 	document.getElementById("canv1").onmousedown = function(event){
 		if (event.button == 0){
-			play.fire();
+			play1.fire();
 		}
 	}
 
@@ -476,7 +673,7 @@ function tankStrikeWall(tank, map){
 			[0,0,0,0,0,0,0,0,0,0,1,1,6,6,1,1,0,0,0,0,0,0,0,0,0,0]
 		];
 	var canvFresh = window.setInterval(function(){
-		canvDraw(map, play, e1);
+		canvDraw(map, play1, e1);
 	}, 20);
 
 }
