@@ -152,7 +152,6 @@ window.onload = function(){
 		bullet.strength = 0;
 
 		bullet.run = function(whichTank){
-
 			if ((bullet.x >= 520 || bullet.x <= 0 || bullet.y >= 520 || bullet.y <= 0) && bullet.isLive){
 				window.clearInterval(bullet.time);
 				bullet.isLive = false;
@@ -174,7 +173,7 @@ window.onload = function(){
 					}
 				}
 				else {
-					enemyBulletbomb[whichTank] = null;
+					enemyBullet[whichTank] = null;
 					switch(bullet.dir){
 						case 0:
 							enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y);
@@ -192,8 +191,16 @@ window.onload = function(){
 				}
 			}
 			else {
-				if (bulletWallStrike(player1Bullet, map, "p1")){
-					return;
+
+				if (whichTank == "p1"){
+					if (bulletWallStrike(player1Bullet, map, "p1")){
+						return;
+					}	
+				}
+				else{
+					if (bulletWallStrike(enemyBullet[whichTank], map, whichTank)){
+						return;
+					}
 				}
 				switch (bullet.dir){
 					case 0:
@@ -208,6 +215,10 @@ window.onload = function(){
 					case 3:
 						bullet.x -= bullet.rate;
 						break;
+				}
+				bulletStrikeTank(bullet, whichTank);
+				if (whichTank == "p1"){
+					bulletStrikeBullet(bullet);	
 				}
 			}
 		}
@@ -228,16 +239,16 @@ window.onload = function(){
 			audFire.play();//子弹发音
 			switch (player.dir){
 				case 0:
-					player1Bullet = new Bullet(player.x + 15, player.y - 5, 7, player.dir);
+					player1Bullet = new Bullet(player.x + 15, player.y, 7, player.dir);
 					break;
 				case 1:
-					player1Bullet = new Bullet(player.x + 40, player.y + 15, 7, player.dir);
+					player1Bullet = new Bullet(player.x + 30, player.y + 15, 7, player.dir);
 					break;
 				case 2:
-					player1Bullet = new Bullet(player.x + 15, player.y + 40, 7, player.dir);
+					player1Bullet = new Bullet(player.x + 15, player.y + 30, 7, player.dir);
 					break;
 				case 3:
-					player1Bullet = new Bullet(player.x - 5, player.y + 15, 7, player.dir);
+					player1Bullet = new Bullet(player.x, player.y + 15, 7, player.dir);
 					break;
 			}
 			player1Bullet.time = window.setInterval("player1Bullet.run('p1')", 20);
@@ -256,7 +267,7 @@ window.onload = function(){
 			if (enemy.isLive == false){
 				return;
 			}
-			enemy.changDir();
+			enemy.changeDir();
 			switch (enemy.dir){
 				case 0: 
 					if (enemy.y <= 0){
@@ -309,7 +320,7 @@ window.onload = function(){
 			if (enemyBullet[en] != null){
 				return;
 			}
-			if ((Math.round(Math.random()*99)) < 4){
+			if ((Math.round(Math.random()*99)) < 3){
 				switch (enemy.dir){
 				case 0:
 					enemyBullet[en] = new Bullet(enemy.x + 15, enemy.y - 5, 7, enemy.dir);
@@ -324,8 +335,8 @@ window.onload = function(){
 					enemyBullet[en] = new Bullet(enemy.x - 5, enemy.y + 15, 7, enemy.dir);
 					break;
 				}
+				enemyBullet[en].time = window.setInterval("enemyBullet["+en+"].run("+en+")", 20);
 			}
-			enemyBullet[en].time = window.setInterval("enemyBullet["+en+"].run("+en+")", 20);
 		}
 		enemy.enemyTouch = function (enemy1){
 			var enemy2 = null;
@@ -334,34 +345,46 @@ window.onload = function(){
 				if (enemy2 != null && enemy2.isLive == true){
 					switch (enemy1.dir){
 						case 0:
-							if ((play1 != null && play1.isLive == true)&&(enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y <= play1.y - 38)){
-								return true;
-							}
-							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y <= enemy2.y - 38)){
+							if ((enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y <= enemy2.y - 38)){
 								return true;
 							}
 							break;
 						case 1:
-							if ((play1 != null && play1.isLive == true)&&(enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x >= play1.x - 38)){
-								return true;
-							}
-							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x >= enemy2.x - 38)){
+							if ((enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x >= enemy2.x - 38)){
 								return true;
 							}
 							break;
 						case 2:
-							if ((play1 != null && play1.isLive == true)&&(enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y >= play1.y - 38)){
-								return true;
-							}
-							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y >= enemy2.y - 38)){
+							if ((enemy1.x > enemy2.x - 40)&&(enemy1.x < enemy2.x + 40)&&(enemy1.y >= enemy2.y - 38)){
 								return true;
 							}
 							break;
 						case 3:
-							if ((play1 != null && play1.isLive == true)&&(enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x <= play1.x + 38)){
+							if ((enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x <= enemy2.x + 38)){
 								return true;
 							}
-							if ((enemy2 != null && enemy2.isLive == true)&&(enemy1.y > enemy2.y - 40)&&(enemy1.y < enemy2.y + 40)&&(enemy1.x <= enemy2.x + 38)){
+							break;
+					}
+				}
+				if (play1 != null && play1.isLive == true){
+					switch (enemy1.dir){
+						case 0:
+							if ((enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y <= play1.y - 38)){
+								return true;
+							}
+							break;
+						case 1:
+							if ((enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x >= play1.x - 38)){
+								return true;
+							}
+							break;
+						case 2:
+							if ((enemy1.x > play1.x - 40)&&(enemy1.x < play1.x + 40)&&(enemy1.y >= play1.y - 38)){
+								return true;
+							}
+							break;
+						case 3:
+							if ((enemy1.y > play1.y - 40)&&(enemy1.y < play1.y + 40)&&(enemy1.x <= play1.x + 38)){
 								return true;
 							}
 							break;
@@ -370,6 +393,16 @@ window.onload = function(){
 			}
 
 		}
+		enemy.time = setInterval(function (){
+			if (enemy.isLive){
+				// enemy.move();
+				enemy.fire(0);
+			}
+			else{
+				clearInterval(enemy.time);
+				enemy = null;
+			}
+		},20)
 
 		return enemy;
 	}
@@ -430,7 +463,7 @@ window.onload = function(){
 function bulletWallStrike(bullet, map, whichTank){
 
 	var numX = Math.floor(bullet.x/20),
-		numY = Math.floor(bullet.y/20);
+		numY = Math.floor((bullet.y)/20);
 
 	switch(map.mapArr[numY][numX]){
 		case 1:
@@ -476,7 +509,6 @@ function bulletWallStrike(bullet, map, whichTank){
 					}
 					break;
 			}
-			map.mapArr[numY][numX] = 0;
 			window.clearInterval(bullet.time);
 			bullet.isLive = false;
 			if (whichTank == 'p1'){
@@ -484,7 +516,7 @@ function bulletWallStrike(bullet, map, whichTank){
 				player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y);
 			}
 			else {
-				enemyBulletbomb[whichTank] = null;
+				enemyBullet[whichTank] = null;
 				enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y);
 			}
 			return 1;
@@ -541,7 +573,7 @@ function bulletWallStrike(bullet, map, whichTank){
 				player1BulletBomb = new bulletBomb(bullet.x - 8, bullet.y - 8);
 			}
 			else {
-				enemyBulletbomb[whichTank] = null;
+				enemyBullet[whichTank] = null;
 				enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y - 5);
 			}
 			return 1;
@@ -554,7 +586,7 @@ function bulletWallStrike(bullet, map, whichTank){
 				player1BulletBomb = new bulletBomb(bullet.x - 8, bullet.y - 8);
 			}
 			else {
-				enemyBulletbomb[whichTank] = null;
+				enemyBullet[whichTank] = null;
 				enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y - 5);
 			}
 			map.mapArr[24][12] = 7;
@@ -568,29 +600,132 @@ function tankStrikeWall(tank, map){
 	var y = tank.y;
 	switch (tank.dir){
 		case 0: 
-			if (map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 3|| map.mapArr[Math.floor(y/20)][Math.floor((x+35)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+35)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+35)/20)] == 3){
+			if (map.mapArr[Math.floor(y/20)][Math.floor((x+2)/20)] == 6||map.mapArr[Math.floor(y/20)][Math.floor((x+2)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+2)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+2)/20)] == 3|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 6||map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+20)/20)] == 3|| map.mapArr[Math.floor(y/20)][Math.floor((x+38)/20)] == 6||map.mapArr[Math.floor(y/20)][Math.floor((x+38)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+38)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+38)/20)] == 3){
 				tank.y = 20 * (Math.floor(y/20)+1);
 			}
 			break;
 		case 1:
-			if (map.mapArr[Math.floor(y/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor((x+40)/20)] == 3|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 3|| map.mapArr[Math.floor((y+35)/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor((y+35)/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor((y+35)/20)][Math.floor((x+40)/20)] == 3){
+			if (map.mapArr[Math.floor((y+2)/20)][Math.floor((x+40)/20)] == 6||map.mapArr[Math.floor((y+2)/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor((y+2)/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor((y+2)/20)][Math.floor((x+40)/20)] == 3|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 6||map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor((y+20)/20)][Math.floor((x+40)/20)] == 3|| map.mapArr[Math.floor((y+38)/20)][Math.floor((x+40)/20)] == 6||map.mapArr[Math.floor((y+38)/20)][Math.floor((x+40)/20)] == 1|| map.mapArr[Math.floor((y+38)/20)][Math.floor((x+40)/20)] == 2|| map.mapArr[Math.floor((y+38)/20)][Math.floor((x+40)/20)] == 3){
 				tank.x = 20 * Math.floor(x/20);
 			}
 			break;
 		case 2:
-			if (map.mapArr[Math.floor((y+40)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+40)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+40)/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+20)/20)] == 1|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+20)/20)] == 2|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+20)/20)] == 3|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+35)/20)] == 1|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+35)/20)] == 2|| map.mapArr[Math.floor((y+40)/20)][Math.floor((x+35)/20)] == 3){
+			if (map.mapArr[Math.floor((y+37)/20)][Math.floor((x+2)/20)] == 6||map.mapArr[Math.floor((y+37)/20)][Math.floor((x+2)/20)] == 1|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+2)/20)] == 2|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+2)/20)] == 3|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+20)/20)] == 6||map.mapArr[Math.floor((y+37)/20)][Math.floor((x+20)/20)] == 1|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+20)/20)] == 2|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+20)/20)] == 3|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+38)/20)] == 6||map.mapArr[Math.floor((y+37)/20)][Math.floor((x+38)/20)] == 1|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+38)/20)] == 2|| map.mapArr[Math.floor((y+37)/20)][Math.floor((x+38)/20)] == 3){
 				tank.y = 20 * Math.floor(y/20);
 			}
 			break;
 		case 3: 
-			if (map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor(y/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor((y+35)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+35)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+35)/20)][Math.floor(x/20)] == 3){
+			if (map.mapArr[Math.floor((y+2)/20)][Math.floor(x/20)] == 6||map.mapArr[Math.floor((y+2)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+2)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+2)/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 6||map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+20)/20)][Math.floor(x/20)] == 3|| map.mapArr[Math.floor((y+38)/20)][Math.floor(x/20)] == 6||map.mapArr[Math.floor((y+38)/20)][Math.floor(x/20)] == 1|| map.mapArr[Math.floor((y+38)/20)][Math.floor(x/20)] == 2|| map.mapArr[Math.floor((y+38)/20)][Math.floor(x/20)] == 3){
 				tank.x = 20 * (Math.floor(x/20)+1);
 			}
 			break;
 	}
 }
 //回去把enemy给搞完吧
+//下来是对于子弹打击坦克的检测
+function bulletStrikeTank(bullet, whichTank){
 
+	if (whichTank == "p1"){
+		for (en in enemy){
+			if (enemy[en] == null || enemy[en].isLive == false){
+				continue;
+			}
+			
+			if (bullet.y <= (enemy[en].y+43) && bullet.y >= (enemy[en].y-3) && bullet.x >= (enemy[en].x-3) && bullet.x <= (enemy[en].x + 43)){
+				enemy[en].isLive = false;
+				window.clearInterval(bullet.time);
+				bullet.isLive = false;
+				switch (bullet.dir){
+						case 0: 
+							player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y);
+							break;
+						case 1:
+							player1BulletBomb = new bulletBomb(bullet.x - 15, bullet.y - 5);
+							break;
+						case 2:
+							player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y - 15);
+							break;
+						case 3:
+							player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y - 5);
+							break;
+					}
+				player1Bullet = null;
+				return;
+			}
+		}
+	}	
+	else {//如果是敌人的子弹的话呢么就要进行判断
+		if (play1.isLive == false || play1 == null){
+			return;
+		}
+		if (bullet.x >= (play1.x-2)&&bullet.x <= (play1.x+42)&&bullet.y >= (play1.y-2)&&bullet.y <= (play1.y+42)){
+			play1.isLive = false;
+			bullet.isLive = false;
+			switch(bullet.dir){
+				case 0:
+					enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y);
+					break;
+				case 1:
+					enemyBulletBomb[whichTank] = new bulletBomb(bullet.x - 15, bullet.y - 5);
+					break;
+				case 2:
+					enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x - 5, bullet.y - 15);
+					break;	
+				case 3:
+					enemyBulletBomb[whichTank] =  new bulletBomb(bullet.x -5, bullet.y - 5);
+					break;	
+			}
+			window.clearInterval(bullet.time);
+			bullet = null;
+		}
+	}
+}
+
+
+//这个是用来判断子弹与子弹是否撞击的
+function bulletStrikeBullet(bullet){
+	for (en in enemyBullet){
+		if (enemyBullet[en] == null|| enemyBullet[en].isLive == false){
+			return;
+		}
+		if (bullet.x >= (enemyBullet[en].x-10)&&bullet.x <= (enemyBullet[en].x+10)&&bullet.y>=(enemyBullet[en].y-10)&&bullet.y<=(enemyBullet[en].y+10)){
+					window.clearInterval(bullet.time);
+					window.clearInterval(enemyBullet[en].time);
+					enemyBullet[en].isLive = false;
+					player1Bullet.isLive = false;
+					switch (bullet.dir){
+							case 0: 
+								player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y);
+								break;
+							case 1:
+								player1BulletBomb = new bulletBomb(bullet.x - 15, bullet.y - 5);
+								break;
+							case 2:
+								player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y - 15);
+								break;
+							case 3:
+								player1BulletBomb = new bulletBomb(bullet.x - 5, bullet.y - 5);
+								break;
+						}
+					player1Bullet = null;
+					switch(enemyBullet[en].dir){
+							case 0:
+								enemyBulletBomb[en] =  new bulletBomb(enemyBullet[en].x - 5, enemyBullet[en].y);
+								break;
+							case 1:
+								enemyBulletBomb[en] = new bulletBomb(enemyBullet[en].x - 15, enemyBullet[en].y - 5);
+								break;
+							case 2:
+								enemyBulletBomb[en] =  new bulletBomb(enemyBullet[en].x - 5, enemyBullet[en].y - 15);
+								break;	
+							case 3:
+								enemyBulletBomb[en] =  new bulletBomb(enemyBullet[en].x -5, enemyBullet[en].y - 5);
+								break;	
+						}
+					enemyBullet[en] = null;
+		}
+	}
+}
 
 
 
@@ -613,12 +748,17 @@ function tankStrikeWall(tank, map){
 		if (player1BulletBomb != null && player1BulletBomb.isLive == true){
 			player1BulletBomb.drawBomb();
 		}
-
+		if (enemyBullet[0] != null&&enemyBullet[0].isLive == true){
+			canv.drawImage(ebul, enemyBullet[0].x, enemyBullet[0].y, 10, 10);
+		}
+		if (enemyBulletBomb[0] != null && enemyBulletBomb[0].isLive == true){
+			enemyBulletBomb[0].drawBomb();
+		}
 
 	}
 	//下面是临时测试以及涉及到最后的实现。
-	play1 = new Player(160, 480, 0, 5, player2, true);
-	e1 = new Enemy(0, 0, 2, 4, enemy1, true);
+	play1 = new Player(160, 480, 0, 7, player2, true);
+	enemy[0] = new Enemy(0, 0, 2, 3, enemy1, true);
 	//下面的这个是很重要的
 	window.onkeypress = function(event){
 		switch (event.keyCode){
@@ -673,7 +813,9 @@ function tankStrikeWall(tank, map){
 			[0,0,0,0,0,0,0,0,0,0,1,1,6,6,1,1,0,0,0,0,0,0,0,0,0,0]
 		];
 	var canvFresh = window.setInterval(function(){
-		canvDraw(map, play1, e1);
-	}, 20);
-
+		canvDraw(map, play1, enemy[0]);
+	}, 10);
+	// window.ondblclick = function(){
+	// 	alert(play1.isLive);
+	// }
 }
