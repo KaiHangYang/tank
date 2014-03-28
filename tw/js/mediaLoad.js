@@ -9,6 +9,7 @@
 	buff4 = new Image();
  	base = new Image();
  	baseDes = new Image();
+ 	gOver = new Image();
   	player1 = new Array();
 	player2 = new Array();
 	enemy1 = new Array();
@@ -67,6 +68,7 @@
 	buff4.src = "media/img/buff/timer.gif";
 	base.src = "media/img/others/symbol.gif";
 	baseDes.src = "media/img/effect/destory.gif";
+	gOver.src = "media/img/others/over.gif";
 	player1[0].src = "media/img/player/p1tankU.gif";
 	player1[1].src = "media/img/player/p1tankR.gif";
 	player1[2].src = "media/img/player/p1tankD.gif";
