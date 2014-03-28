@@ -1,6 +1,8 @@
-function gameStart(){
+window.onload = function(){
 	//画笔
-	audStart.play();
+	canv = document.getElementById("canv2").getContext("2d");
+	canvStatic = document.getElementById("canv1").getContext("2d");
+
 	GAMEOVER = false;
 	TANKLIFE = 6;
 	ENEMYDEATH = 1;
@@ -454,10 +456,10 @@ function gameStart(){
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+			[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,5,6,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,6,6,1,1,0,0,0,0,0,0,0,0,0,0]
 		];//经过测试你所想得那种自定义墙的方法是可以实现的。我是想在自定义地图的时候直接操作一个数组最后画出来就可以了
 		map.drawMap = function(){
 			//这里使用来遍历数组中的所有元素以便画地图。
@@ -884,148 +886,332 @@ function gameStart(){
 		}
 
 	}
-	//下面的这个是很重要的
-	window.onkeypress = function(event){
-		switch (event.keyCode){
-			case 119: 
-				play1.moveUp();
-				playerStrikeEnemy(play1);
-				break;
-			case 100:
-				play1.moveRight();
-				playerStrikeEnemy(play1);
-				break;
-			case 115:
-				play1.moveDown();
-				playerStrikeEnemy(play1);
-				break;
-			case 97:
-				play1.moveLeft();
-				playerStrikeEnemy(play1);
-				break;
-		}
-	}
-	document.getElementById("canv1").onmousedown = function(event){
-		if (event.button == 0){
-			play1.fire();
-		}
-	}
 
 	//下面是地图	
 	map = new Map();
-	map.mapArr =  [   
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,3,0,0,4,4,4,4,0,0],
-			[0,0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,3,0,0,4,4,4,4,0,0],
-			[0,0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,3,0,0,4,4,4,4,0,0],
-			[0,0,1,1,1,1,0,0,2,2,2,2,0,0,3,3,3,3,0,0,4,4,4,4,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,2,2,5,6,2,2,0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0,2,2,6,6,2,2,0,0,0,0,0,0,0,0,0,0]
-		];
+	map.mapArr =  [
 
-	map.drawMap();
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+			[4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+			[4,4,4,4,4,4,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+			[4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+			[4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+			[4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+			[4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,5,6,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,1,1,6,6,1,1,0,0,0,0,0,0,0,0,0,0]
+		];
 	play1.isLive = false;
 	for (en in enemyArr){
 		enemyArr[en].isLive = false;
 	}
-	canvFresh = window.setInterval(function(){
-		canvDraw(map, play1, enemyArr);
-		gameOverTest();
-		tankDie();
-	}, 10);	
 
+	function gameStart(){
+		audStart.play();
+		map.drawMap();
+		g_Over = setInterval(function (){
+			
+				if (GAMEOVER == true&&WIN == false){
+					canv.clearRect(0, 0, 520, 520);
+					canvStatic.clearRect(0, 0, 520, 520);
+					canv.drawImage(gOver, 0, 0, 80, 5, 140, 192.5, 240, 15);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 10, 140, 192.5, 240, 30)", 100);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 15, 140, 192.5, 240, 45)", 200);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 20, 140, 192.5, 240, 60)", 300);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 25, 140, 192.5, 240, 75)", 400);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 30, 140, 192.5, 240, 90)", 500);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 35, 140, 192.5, 240, 105)", 600);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 40, 140, 192.5, 240, 120)", 700);
+					setTimeout("canv.drawImage(gOver, 0, 0, 80, 45, 140, 192.5, 240, 135)", 800);
+					clearInterval(g_Over);				
+				}
+				else if (GAMEOVER == true && WIN == true){
+					canv.clearRect(0, 0, 520, 520);
+					canvStatic.clearRect(0, 0, 520, 520);
+					canv.drawImage(win, 0, 0, 80, 5, 140, 192.5, 240, 15);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 10, 140, 192.5, 240, 30)", 100);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 15, 140, 192.5, 240, 45)", 200);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 20, 140, 192.5, 240, 60)", 300);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 25, 140, 192.5, 240, 75)", 400);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 30, 140, 192.5, 240, 90)", 500);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 35, 140, 192.5, 240, 105)", 600);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 40, 140, 192.5, 240, 120)", 700);
+					setTimeout("canv.drawImage(win, 0, 0, 80, 45, 140, 192.5, 240, 135)", 800);
+					clearInterval(g_Over);					
+				}
+		}, 1000);
 
-	//下面的还是有问题需要优化  可以了
-	enemyNumTest = window.setInterval(function (){
-		var enemyNum = new Array();
-		var i = 0;
-		var n;
-		for (var en = 0; en < enemyArr.length; en++){
-			if (enemyArr[en].isLive == false){
-				enemyNum[i++] = en;
-			}
-		}
-		if ((4 - enemyNum.length) < ENEMYDEATH){
-
-			n = ENEMYDEATH - 4 + enemyNum.length;
-			if (n >= enemyNum.length){
-				n = enemyNum.length;
-			}
-			for (var t = 0; t < n; t++){
-				switch(enemyNum[t]){
-					case 0:
-						enemyBorn[0] = new tankBorn(0, 0);
-						window.setTimeout(function (){
-							enemyArr[0] = new Enemy(0, 0, 2, 2, enemy1, true, 0);
-						},200);
-						break;
-					case 1:
-						enemyBorn[1] = new tankBorn(180, 0);
-						window.setTimeout(function (){
-							enemyArr[1] = new Enemy(180, 0, 2, 2, enemy2, true, 1);
-						},200);
-						break;
-					case 2:
-						enemyBorn[2] = new tankBorn(340, 0);
-						window.setTimeout(function (){
-							enemyArr[2] = new Enemy(340, 0, 2, 3.5, enemy3, true, 2);
-						},200);
-						break;
-					case 3:
-						enemyBorn[3] = new tankBorn(340, 0);
-						window.setTimeout(function (){
-							enemyArr[3] = new Enemy(500, 0, 2, 3, enemy4[0], true, 3);
-						},200);
-						break;
+		enemyNumTest = window.setInterval(function (){
+			var enemyNum = new Array();
+			var i = 0;
+			var n;
+			for (var en = 0; en < enemyArr.length; en++){
+				if (enemyArr[en].isLive == false){
+					enemyNum[i++] = en;
 				}
 			}
-		}
-	}, 7000);
-	
-	g_Over = setInterval(function (){
-		
-			if (GAMEOVER == true){
-				canv.clearRect(0, 0, 520, 520);
-				canvStatic.clearRect(0, 0, 520, 520);
-				canv.drawImage(gOver, 0, 0, 80, 5, 140, 192.5, 240, 15);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 10, 140, 192.5, 240, 30)", 100);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 15, 140, 192.5, 240, 45)", 200);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 20, 140, 192.5, 240, 60)", 300);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 25, 140, 192.5, 240, 75)", 400);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 30, 140, 192.5, 240, 90)", 500);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 35, 140, 192.5, 240, 105)", 600);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 40, 140, 192.5, 240, 120)", 700);
-				setTimeout("canv.drawImage(gOver, 0, 0, 80, 45, 140, 192.5, 240, 135)", 800);
-				clearInterval(g_Over);				
-			}
-	}, 1000);
+			if ((4 - enemyNum.length) < ENEMYDEATH){
 
+				n = ENEMYDEATH - 4 + enemyNum.length;
+				if (n >= enemyNum.length){
+					n = enemyNum.length;
+				}
+				for (var t = 0; t < n; t++){
+					switch(enemyNum[t]){
+						case 0:
+							enemyBorn[0] = new tankBorn(0, 0);
+							window.setTimeout(function (){
+								enemyArr[0] = new Enemy(0, 0, 2, 2, enemy1, true, 0);
+							},200);
+							break;
+						case 1:
+							enemyBorn[1] = new tankBorn(180, 0);
+							window.setTimeout(function (){
+								enemyArr[1] = new Enemy(180, 0, 2, 2, enemy2, true, 1);
+							},200);
+							break;
+						case 2:
+							enemyBorn[2] = new tankBorn(340, 0);
+							window.setTimeout(function (){
+								enemyArr[2] = new Enemy(340, 0, 2, 3.5, enemy3, true, 2);
+							},200);
+							break;
+						case 3:
+							enemyBorn[3] = new tankBorn(340, 0);
+							window.setTimeout(function (){
+								enemyArr[3] = new Enemy(500, 0, 2, 3, enemy4[0], true, 3);
+							},200);
+							break;
+					}
+				}
+			}
+		}, 7000);
+
+			canvFresh = window.setInterval(function(){
+			canvDraw(map, play1, enemyArr);
+			gameOverTest();
+			tankDie();
+			document.getElementById("t_life").innerHTML = TANKLIFE;
+			document.getElementById("e_num").innerHTML = ENEMYDEATH;
+		}, 10);	
+
+
+		window.onkeypress = function(event){
+			switch (event.keyCode){
+				case 119: 
+					play1.moveUp();
+					playerStrikeEnemy(play1);
+					break;
+				case 100:
+					play1.moveRight();
+					playerStrikeEnemy(play1);
+					break;
+				case 115:
+					play1.moveDown();
+					playerStrikeEnemy(play1);
+					break;
+				case 97:
+					play1.moveLeft();
+					playerStrikeEnemy(play1);
+					break;
+			}
+		}
+		document.getElementById("canv1").onmousedown = function(event){
+			if (event.button == 0){
+				play1.fire();
+			}
+		}
+
+	}
+	//下面是对dom元素的
+	var st = document.getElementById("start");
+	var dm = document.getElementById("directMap");
+	var g_tool = document.getElementById("toolGuide");
+	var b_tool = document.getElementById("toolBox");
+	var life = document.getElementById("life");
+	var eNum = document.getElementById("eNum");
+	var restart = document.getElementById("restart");
+
+	st.onclick = function(){
+		gameStart();
+		st.style.display = "none";
+		dm.style.display = "none";
+	}
+	dm.onclick = function(){
+		mapDirect();
+		st.style.display = "none";
+		dm.style.display = "none";	
+	}
+	var	box_h_s = 0;
+	g_tool.onclick=function(){
+		if (box_h_s == 0){
+			b_tool.className = "toolBox_show";
+			box_h_s = 1;
+		}
+		else{
+			b_tool.className = "toolBox_hide";
+			box_h_s = 0;
+		}
+	}
+	life.onfocus = function(){
+		life.value = "";
+	} 
+	life.onblur = function(){
+		life.value = "输入要修改的坦克的生命值";
+	}
+	life.onkeydown = function(e){
+		if (e.keyCode != 13){
+			return;
+		}
+		var a = life.value;
+		if (isNaN(a)){
+			alert("请输入数字");
+		}
+		else{
+			TANKLIFE = a;
+		}
+	}
+	eNum.onblur = function(){
+		eNum.value = "输入要修改的敌人的数量";
+	}
+
+	eNum.onfocus = function(){
+		eNum.value = "";
+	} 
+	eNum.onkeydown = function(e){
+		if (e.keyCode != 13){
+			return;
+		}
+		var a = eNum.value;
+		if (isNaN(a)){
+			alert("请输入数字");
+		}
+		else{
+			ENEMYDEATH = a;
+		}
+	}
+
+	restart.onclick = function(){
+		location.reload();
+	}
+
+	function mapDirect(){
+		a = 1;
+		map = new Map();
+		block = new Block();
+		mapfactors = document.getElementById("mapfactors");
+		mapfactors.style.display = "block";
+		f_wall = document.getElementById("wall");
+		f_steel = document.getElementById("steel");
+		f_water = document.getElementById("water");
+		f_grass = document.getElementById("grass");
+		end = document.getElementById("end");
+		f_null= document.getElementById("null");
+		var c_draw = setInterval(function(){
+			canv.clearRect(0, 0, 520, 520);
+			canvStatic.clearRect(0, 0, 520, 520);
+			map.drawMap();
+			block.draw();
+		},10);
+		window.onkeydown = function(e){
+			var eCode = e.keyCode;
+			switch (eCode){
+				case 87:
+					if (block.y <= 0){	
+						return;
+					}
+					else{
+						block.y -= 40;
+					}
+					break;
+				case 68:
+					if (block.x + 40 >= 520){
+						return;
+					}
+					else{
+						block.x += 40;
+					}
+					break;
+				case 83:
+					if (block.y + 40 >= 520){
+						return;
+					}
+					else{
+						block.y += 40;
+					}
+					break;
+				case 65: 
+					if (block.x <= 0){
+						return;
+					}
+					else{
+						block.x -= 40;
+					}
+					break;
+				case 32:
+					if (e.keyCode == 32){
+						if (map.mapArr[block.y/20][block.x/20]!= 5){
+							map.mapArr[block.y/20][block.x/20] = a;
+							map.mapArr[block.y/20 + 1][block.x/20] = a;
+							map.mapArr[block.y/20][block.x/20 + 1] = a;
+							map.mapArr[block.y/20 + 1][block.x/20 + 1] = a;	
+						}
+					}
+					break;
+			}
+		}
+		f_wall.onclick = function(){
+			a = 1;
+		}
+		f_steel.onclick = function(){
+			a = 2;
+		}
+		f_grass.onclick = function(){
+			a = 4;
+		}
+		f_water.onclick = function(){
+			a = 3;
+		}
+		f_null.onclick = function(){
+			a = 0;
+		}
+		end.onclick = function(){
+			mapfactors.style.display = "none";
+			clearInterval(c_draw);
+			window.onkeydown = null;
+			canv.clearRect(0, 0, 520, 520);
+			canvStatic.clearRect(0, 0, 520, 520);
+			gameStart();
+		}
+	}	
+
+	
+
+	//下面是创建一个在地图编辑的时候的一个小块
+	function Block(){
+		this.x = 0;
+		this.y = 0;
+		this.draw = function(){
+			canvStatic.fillStyle = "rgba(241, 234, 234, 0.3)";
+			canvStatic.fillRect(this.x, this.y, 40, 40);
+		}
+	}
 }
 //下面是地图编辑的方法
-function mapDirect(){
-	
-}
-window.onload = function(){
-	canv = document.getElementById("canv2").getContext("2d");
-	canvStatic = document.getElementById("canv1").getContext("2d");
-	gameStart();
-}
