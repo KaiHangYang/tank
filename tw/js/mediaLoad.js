@@ -10,6 +10,7 @@
  	base = new Image();
  	baseDes = new Image();
  	gOver = new Image();
+ 	win = new Image();
   	player1 = new Array();
 	player2 = new Array();
 	enemy1 = new Array();
@@ -69,6 +70,7 @@
 	base.src = "media/img/others/symbol.gif";
 	baseDes.src = "media/img/effect/destory.gif";
 	gOver.src = "media/img/others/over.gif";
+	win.src = "media/img/others/win.png";
 	player1[0].src = "media/img/player/p1tankU.gif";
 	player1[1].src = "media/img/player/p1tankR.gif";
 	player1[2].src = "media/img/player/p1tankD.gif";

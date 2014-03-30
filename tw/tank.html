@@ -11,27 +11,40 @@
 		<header id="head">HTML5 GAME TANK WAR</header>
 		<div id="cOut">
 			<div id="toolBox" class="toolBox_hide">
-				<input id="life" type="input" value="输入要修改的坦克的生命值"></input>
-				<input id="eNum" type="input" value="输入要修改的敌人的数量"></input>
+				<input id="close" type="button" value="X"></input>
+				<input id="life" type="input" value="输入坦克的生命(Enter提交)"></input>
+				<input id="eNum" type="input" value="输入敌人数量(Enter提交)"></input>
 				<input id="restart" type="button" value="重新来过"></input>
 			</div>
-			<div id="start">开始游戏</div>
-			<div id="directMap">自定义编辑地图</div>
+			<div id="start">
+				开始游戏
+				</br>
+				w d s a 分别为上下左右 空格发射子弹
+			</div>
+			<div id="directMap">
+				自定义编辑地图
+				</br>
+				里面自有方法介绍
+			</div>
 			<div id ="mapfactors">
+				w d s a 上下左右, 空格放墙块,点击下面的不同按钮,放不同的方块.
 				<input id="wall" type="button" value="砖墙"></input>
 				<input id="steel" type="button" value="铁墙"></input>
 				<input id="water" type="button" value="水面"></input>
 				<input id="grass" type="button" value="草丛"></input>
 				<input id="null" type="button" value="空气"></input>
 				<input id="end" type="button" value="开始游戏"></input>
+				<input id="back" type="button" value="返回"></input>
 			</div>
 			<canvas id="canv1" class="canv" width="520px" height="520px"></canvas>
 			<canvas id="canv2" class="canv" width="520px" height="520px"></canvas>
+			<canvas id="canv3" class="canv" width="520px" height="520px"></canvas>		
 			<div id="warSituation">
 				坦克当前的生命值：<p id="t_life" class="p1"></p>
 				剩余敌人数量：<p id="e_num" class="p1"></p>
 			</div>
-			<div id="toolGuide" style="text-align:center">工具</div>
+			<div id="toolGuide" style="text-align:center">挂</div>
+			<div id="goon"></div>
 		</div>
 	</body>
 </html>
